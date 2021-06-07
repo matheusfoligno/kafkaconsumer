@@ -11,7 +11,7 @@ import br.com.kafkaconsumer.utils.SlackUtils;
 @Service
 public class KafkaConsumerService {
 	
-	private static final String TOPIC = "slack-messages";
+	private static final String TOPIC = "slack";
 
 	@KafkaListener(topics = TOPIC, groupId = "slack")
     public void consume(String message) throws IOException {
