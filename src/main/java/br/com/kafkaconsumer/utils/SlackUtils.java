@@ -9,30 +9,30 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.kafkaconsumer.dtos.SlackMessage;
-
 public class SlackUtils {
 
 	private static final String URL = "aHR0cHM6Ly9zbGFjay5jb20vYXBpL2NoYXQucG9zdE1lc3NhZ2U=";
 	private static final String TOKEN = "eG94Yi0yMTQ0ODI1OTQxNTI0LTIxNjI0ODI4MDE1MzYtdDZCa3dmOWt6Y3laT0daZ24xU3I1V2RF";
-	private static final String CHANNEL = "QzAyM1ZTMk02Qkc=";
+	private static final String CHANNEL_SLACK = "QzAyM1ZTMk02Qkc=";
+	private static final String CHANNEL_SLACK_TEST = "QzAyM1ZSWEROQ0U=";
 
-	public static void sendMessage(SlackMessage message) {
+	public static void sendMessage(String message, boolean isSlackTest) {
 		RestTemplate template = new RestTemplate();
 
 		HttpHeaders headers = createHeaders();
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromHttpUrl(new String(Base64.decodeBase64(URL.getBytes())));
-		HashMap<String, String> body = setBody(message);
+		HashMap<String, String> body = setBody(message, isSlackTest);
 		HttpEntity<?> entity = new HttpEntity<>(body, headers);
 
 		template.exchange(builder.toUriString(), HttpMethod.POST, entity, Void.class);
 	}
 
-	private static HashMap<String, String> setBody(SlackMessage message) {
+	private static HashMap<String, String> setBody(String message, boolean isSlackTest) {
 		HashMap<String, String> body = new HashMap<>();
-		body.put("channel", new String(Base64.decodeBase64(CHANNEL.getBytes())));
-		body.put("text", message.getText());
+		body.put("channel", new String(
+				Base64.decodeBase64(isSlackTest ? CHANNEL_SLACK_TEST.getBytes() : CHANNEL_SLACK.getBytes())));
+		body.put("text", message);
 		return body;
 	}
 
